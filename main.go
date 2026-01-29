@@ -2,8 +2,9 @@ package main
 
 import (
 	"ProjectTest/config"
-	"ProjectTest/router"
+	"ProjectTest/routers"
 	"ProjectTest/utils"
+	"database/sql"
 	"log"
 	"os"
 
@@ -20,15 +21,23 @@ func main() {
 		port = "5000"
 	}
 
-	app := fiber.New()
-	app.Use(recover.New())
-
 	db, err := config.ConnectDB()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer func(db *sql.DB) {
+		_ = db.Close()
+	}(db)
 
-	router.Register(app, db)
+	jwtCfg, err := config.LoadJWTConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	app := fiber.New()
+	app.Use(recover.New())
+
+	routers.Register(app, db, jwtCfg)
 
 	app.Use(func(c *fiber.Ctx) error {
 		return utils.Fail(c, fiber.StatusNotFound, "route not found")

@@ -7,6 +7,12 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
+type TokenResponse struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	ExpiresIn   int64  `json:"expires_in"`
+}
+
 type User struct {
 	ID           uint64    `json:"id"`
 	Username     string    `json:"username"`

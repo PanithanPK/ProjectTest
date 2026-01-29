@@ -45,5 +45,7 @@ go run .
 - `DB_USER`
 - `DB_PASSWORD`
 - `DB_NAME`
+- `JWT_SECRET`
+- `JWT_EXPIRE` (example: `24h`)
 
 
