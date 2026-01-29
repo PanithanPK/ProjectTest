@@ -60,3 +60,25 @@ func (r *UserRepository) Create(ctx context.Context, u *user.User) (uint64, erro
 	}
 	return uint64(id), nil
 }
+
+func (r *UserRepository) GetByID(ctx context.Context, id uint64) (*user.User, error) {
+	var u user.User
+	err := r.db.QueryRowContext(ctx, `
+		SELECT id, username, password_hash, first_name, last_name, bank_account, credit, created_at, updated_at
+		FROM users
+		WHERE id = ?
+	`, id).Scan(&u.ID, &u.Username, &u.PasswordHash, &u.FirstName, &u.LastName, &u.BankAccount, &u.Credit, &u.CreatedAt, &u.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
+func (r *UserRepository) Update(ctx context.Context, u *user.User) error {
+	_, err := r.db.ExecContext(ctx, `
+		UPDATE users
+		SET password_hash = ?, first_name = ?, last_name = ?, bank_account = ?
+		WHERE id = ?
+	`, u.PasswordHash, u.FirstName, u.LastName, u.BankAccount, u.ID)
+	return err
+}

@@ -50,3 +50,34 @@ func (h *UserHandler) Register(c *fiber.Ctx) error {
 	}
 	return utils.Success(c, fiber.StatusCreated, res)
 }
+
+func (h *UserHandler) Me(c *fiber.Ctx) error {
+	userID, err := UserIDFromJWT(c)
+	if err != nil {
+		return utils.Fail(c, fiber.StatusUnauthorized, "unauthorized")
+	}
+
+	res, err := h.svc.Me(c.Context(), userID)
+	if err != nil {
+		return utils.Fail(c, fiber.StatusBadRequest, err.Error())
+	}
+	return utils.Success(c, fiber.StatusOK, res)
+}
+
+func (h *UserHandler) Update(c *fiber.Ctx) error {
+	userID, err := UserIDFromJWT(c)
+	if err != nil {
+		return utils.Fail(c, fiber.StatusUnauthorized, "unauthorized")
+	}
+
+	var req user.UpdateRequest
+	if err := c.BodyParser(&req); err != nil {
+		return utils.Fail(c, fiber.StatusBadRequest, "invalid request body")
+	}
+
+	res, err := h.svc.Update(c.Context(), userID, req)
+	if err != nil {
+		return utils.Fail(c, fiber.StatusBadRequest, err.Error())
+	}
+	return utils.Success(c, fiber.StatusOK, res)
+}

@@ -24,6 +24,13 @@ type MeResponse struct {
 	Credit      int64  `json:"credit"`
 }
 
+type UpdateRequest struct {
+	Password    *string `json:"password"`
+	FirstName   *string `json:"first_name"`
+	LastName    *string `json:"last_name"`
+	BankAccount *string `json:"bank_account"`
+}
+
 type TokenResponse struct {
 	AccessToken string `json:"access_token"`
 	TokenType   string `json:"token_type"`
