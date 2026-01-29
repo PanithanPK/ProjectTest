@@ -1,0 +1,20 @@
+package user
+
+import "time"
+
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type User struct {
+	ID           uint64    `json:"id"`
+	Username     string    `json:"username"`
+	PasswordHash string    `json:"-"`
+	FirstName    string    `json:"first_name"`
+	LastName     string    `json:"last_name"`
+	BankAccount  string    `json:"bank_account"`
+	Credit       int64     `json:"credit"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+}

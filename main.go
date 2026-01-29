@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ProjectTest/config"
 	"ProjectTest/router"
 	"ProjectTest/utils"
 	"log"
@@ -22,7 +23,12 @@ func main() {
 	app := fiber.New()
 	app.Use(recover.New())
 
-	router.Register(app)
+	db, err := config.ConnectDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	router.Register(app, db)
 
 	app.Use(func(c *fiber.Ctx) error {
 		return utils.Fail(c, fiber.StatusNotFound, "route not found")
