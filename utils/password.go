@@ -1,4 +1,3 @@
-
 package utils
 
 import (
@@ -10,7 +9,9 @@ func HashPassword(password string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return st
+	return string(hash), nil
+}
+
 func CheckPassword(hash string, password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
 }

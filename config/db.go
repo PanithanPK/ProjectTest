@@ -14,7 +14,7 @@ func ConnectDB() (*sql.DB, error) {
 	port := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
-	database := os.Getenv("DB_DATABASE")
+	database := os.Getenv("DB_NAME")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&charset=utf8mb4&collation=utf8mb4_unicode_ci&loc=UTC", user, password, host, port, database)
 
