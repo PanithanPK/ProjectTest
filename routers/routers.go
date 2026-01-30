@@ -19,4 +19,10 @@ func Register(app *fiber.App, db *sql.DB, jwtCfg config.JWTConfig) {
 	auth := middlewares.NewJWTMiddleware(jwtCfg)
 
 	RegisterUserRoutes(app, auth, userH)
+
+	accountingRepo := repositorys.NewAccountingRepository(db)
+	accountingSvc := services.NewAccountingService(db, userRepo, accountingRepo)
+	accountingH := handlers.NewAccountingHandler(accountingSvc)
+
+	RegisterAccountingRoutes(app, auth, accountingH)
 }

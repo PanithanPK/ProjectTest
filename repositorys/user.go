@@ -82,3 +82,40 @@ func (r *UserRepository) Update(ctx context.Context, u *user.User) error {
 	`, u.PasswordHash, u.FirstName, u.LastName, u.BankAccount, u.ID)
 	return err
 }
+
+func (r *UserRepository) GetByIDForUpdate(ctx context.Context, q Querier, id uint64) (*user.User, error) {
+	var u user.User
+	err := q.QueryRowContext(ctx, `
+		SELECT id, username, password_hash, first_name, last_name, bank_account, credit, created_at, updated_at
+		FROM users
+		WHERE id = ?
+		FOR UPDATE
+	`, id).Scan(&u.ID, &u.Username, &u.PasswordHash, &u.FirstName, &u.LastName, &u.BankAccount, &u.Credit, &u.CreatedAt, &u.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
+func (r *UserRepository) GetByBankAccountForUpdate(ctx context.Context, q Querier, bankAccount string) (*user.User, error) {
+	var u user.User
+	err := q.QueryRowContext(ctx, `
+		SELECT id, username, password_hash, first_name, last_name, bank_account, credit, created_at, updated_at
+		FROM users
+		WHERE bank_account = ?
+		FOR UPDATE
+	`, bankAccount).Scan(&u.ID, &u.Username, &u.PasswordHash, &u.FirstName, &u.LastName, &u.BankAccount, &u.Credit, &u.CreatedAt, &u.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
+func (r *UserRepository) UpdateCredit(ctx context.Context, q Querier, id uint64, credit int64) error {
+	_, err := q.ExecContext(ctx, `
+		UPDATE users
+		SET credit = ?
+		WHERE id = ?
+	`, credit, id)
+	return err
+}
