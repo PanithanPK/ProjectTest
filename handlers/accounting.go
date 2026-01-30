@@ -16,6 +16,18 @@ func NewAccountingHandler(svc *services.AccountingService) *AccountingHandler {
 	return &AccountingHandler{svc: svc}
 }
 
+// Transfer godoc
+// @Summary Create transfer
+// @Description Transfer money to another user
+// @Tags Accounting
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body accounting.TransferRequest true "Transfer request"
+// @Success 200 {object} map[string]int64
+// @Failure 400 {object} utils.ErrorResponse
+// @Failure 401 {object} utils.ErrorResponse
+// @Router /accounting/transfer [post]
 func (h *AccountingHandler) Transfer(c *fiber.Ctx) error {
 	userID, err := UserIDFromJWT(c)
 	if err != nil {
@@ -34,6 +46,19 @@ func (h *AccountingHandler) Transfer(c *fiber.Ctx) error {
 	return utils.Success(c, fiber.StatusOK, fiber.Map{"transfer_id": transferID})
 }
 
+// TransferList godoc
+// @Summary List transfers
+// @Description Get list of transfers for the current user
+// @Tags Accounting
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param start_date query string false "Start date"
+// @Param end_date query string false "End date"
+// @Success 200 {array} accounting.TransferItem
+// @Failure 400 {object} utils.ErrorResponse
+// @Failure 401 {object} utils.ErrorResponse
+// @Router /accounting/transfer-list [get]
 func (h *AccountingHandler) TransferList(c *fiber.Ctx) error {
 	userID, err := UserIDFromJWT(c)
 	if err != nil {
